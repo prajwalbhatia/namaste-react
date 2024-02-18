@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import useOnlineStatus from "../hooks/useOnlineStatus";
 
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
@@ -7,8 +8,10 @@ import Shimmer from "./Shimmer";
 const Body = () => {
   const [listRestaurants, setListRestaurants] = useState([]);
   const [listRestaurantsClone, setListRestaurantsClone] = useState([]);
-
   const [searchText, setSearchText] = useState("");
+
+  const onlineStatus = useOnlineStatus();
+  console.log('🚀 ~ Body ~ onlineStatus:', onlineStatus)
 
   const fetchData = async () => {
     const res = await fetch(
@@ -52,6 +55,11 @@ const Body = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  if(!onlineStatus)
+  {
+    return <h1>Looks like you are offline, please check your internet connection</h1>;
+  }
 
   return listRestaurants?.length === 0 ? (
     <Shimmer />
