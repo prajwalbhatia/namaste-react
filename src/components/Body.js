@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
@@ -11,16 +12,16 @@ const Body = () => {
 
   const fetchData = async () => {
     const res = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=30.47570&lng=76.59010&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.5355161&lng=77.3910265&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
     );
     const restaurantsData = await res.json();
 
     setListRestaurants(
-      restaurantsData?.data?.cards?.[3]?.card?.card?.gridElements?.infoWithStyle
+      restaurantsData?.data?.cards?.[1]?.card?.card?.gridElements?.infoWithStyle
         ?.restaurants
     );
     setListRestaurantsClone(
-      restaurantsData?.data?.cards?.[3]?.card?.card?.gridElements?.infoWithStyle
+      restaurantsData?.data?.cards?.[1]?.card?.card?.gridElements?.infoWithStyle
         ?.restaurants
     );
   };
@@ -45,8 +46,8 @@ const Body = () => {
 
   const handleReset = () => {
     setListRestaurants([...listRestaurantsClone]);
-    setSearchText('');
-  }
+    setSearchText("");
+  };
 
   useEffect(() => {
     fetchData();
@@ -63,8 +64,12 @@ const Body = () => {
             className="search-input"
             value={searchText}
           />
-          <button className="c-pointer" onClick={handleSearch}>Search</button>
-          <button className="c-pointer ml-8" onClick={handleReset}>Reset</button>
+          <button className="c-pointer" onClick={handleSearch}>
+            Search
+          </button>
+          <button className="c-pointer ml-8" onClick={handleReset}>
+            Reset
+          </button>
         </div>
 
         <button className="c-pointer filter-btn" onClick={filterRestaurants}>
@@ -73,7 +78,9 @@ const Body = () => {
       </div>
       <div className="res-container">
         {listRestaurants?.map((resData) => (
-          <RestaurantCard key={resData?.info?.id} resData={resData} />
+          <Link key={resData?.info?.id} to={`/restaurant/${resData?.info?.id}`}>
+            <RestaurantCard resData={resData} />
+          </Link>
         ))}
       </div>
     </div>
