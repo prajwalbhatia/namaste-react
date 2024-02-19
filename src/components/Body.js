@@ -1,33 +1,20 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../hooks/useOnlineStatus";
+import useRestaurantsList from "../hooks/useRestaurantsList";
 
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
 
 const Body = () => {
+  const onlineStatus = useOnlineStatus();
+  const listRestaurantsClone = useRestaurantsList();
   const [listRestaurants, setListRestaurants] = useState([]);
-  const [listRestaurantsClone, setListRestaurantsClone] = useState([]);
   const [searchText, setSearchText] = useState("");
 
-  const onlineStatus = useOnlineStatus();
-  console.log('🚀 ~ Body ~ onlineStatus:', onlineStatus)
-
-  const fetchData = async () => {
-    const res = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.5355161&lng=77.3910265&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-    );
-    const restaurantsData = await res.json();
-
-    setListRestaurants(
-      restaurantsData?.data?.cards?.[1]?.card?.card?.gridElements?.infoWithStyle
-        ?.restaurants
-    );
-    setListRestaurantsClone(
-      restaurantsData?.data?.cards?.[1]?.card?.card?.gridElements?.infoWithStyle
-        ?.restaurants
-    );
-  };
+  useEffect(() => {
+    setListRestaurants([...listRestaurantsClone]);
+  }, [listRestaurantsClone]);
 
   const filterRestaurants = () => {
     let restaurantsData = [...listRestaurantsClone];
@@ -52,13 +39,10 @@ const Body = () => {
     setSearchText("");
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  if(!onlineStatus)
-  {
-    return <h1>Looks like you are offline, please check your internet connection</h1>;
+  if (!onlineStatus) {
+    return (
+      <h1>Looks like you are offline, please check your internet connection</h1>
+    );
   }
 
   return listRestaurants?.length === 0 ? (
@@ -66,25 +50,27 @@ const Body = () => {
   ) : (
     <div className="body">
       <div className="filter">
-        <div className="search">
+        <div className="search m-4 p-4">
           <input
             onChange={(e) => setSearchText(e.target.value)}
-            className="search-input"
+            className="border border-solid border-black mr-4"
             value={searchText}
           />
-          <button className="c-pointer" onClick={handleSearch}>
+          <button className="bg-green-200 px-4 py-1 cursor-pointer rounded-md" onClick={handleSearch}>
             Search
           </button>
-          <button className="c-pointer ml-8" onClick={handleReset}>
+          <button className="bg-gray-100 ml-4 px-4 py-1 cursor-pointer rounded-md" onClick={handleReset}>
             Reset
           </button>
-        </div>
 
-        <button className="c-pointer filter-btn" onClick={filterRestaurants}>
+          <button className="bg-gray-200 px-4 py-1 cursor-pointer m-4 rounded-md" onClick={filterRestaurants}>
           Top rated restaurants
         </button>
+        </div>
+
+
       </div>
-      <div className="res-container">
+      <div className="flex flex-wrap">
         {listRestaurants?.map((resData) => (
           <Link key={resData?.info?.id} to={`/restaurant/${resData?.info?.id}`}>
             <RestaurantCard resData={resData} />
