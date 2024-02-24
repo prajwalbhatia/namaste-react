@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import UserContext from "../contexts/UserContext";
 import useOnlineStatus from "../hooks/useOnlineStatus";
 import useRestaurantsList from "../hooks/useRestaurantsList";
 
@@ -11,6 +12,8 @@ const Body = () => {
   const listRestaurantsClone = useRestaurantsList();
   const [listRestaurants, setListRestaurants] = useState([]);
   const [searchText, setSearchText] = useState("");
+
+  const { loggedInUser, setUserName } = useContext(UserContext);
 
   useEffect(() => {
     setListRestaurants([...listRestaurantsClone]);
@@ -45,7 +48,7 @@ const Body = () => {
     );
   }
 
-  return listRestaurants?.length ===  0 ? (
+  return listRestaurants?.length === 0 ? (
     <Shimmer />
   ) : (
     <div className="body">
@@ -56,19 +59,32 @@ const Body = () => {
             className="border border-solid border-black mr-4"
             value={searchText}
           />
-          <button className="bg-green-200 px-4 py-1 cursor-pointer rounded-md" onClick={handleSearch}>
+          <button
+            className="bg-green-200 px-4 py-1 cursor-pointer rounded-md"
+            onClick={handleSearch}
+          >
             Search
           </button>
-          <button className="bg-gray-100 ml-4 px-4 py-1 cursor-pointer rounded-md" onClick={handleReset}>
+          <button
+            className="bg-gray-100 ml-4 px-4 py-1 cursor-pointer rounded-md"
+            onClick={handleReset}
+          >
             Reset
           </button>
 
-          <button className="bg-gray-200 px-4 py-1 cursor-pointer m-4 rounded-md" onClick={filterRestaurants}>
-          Top rated restaurants
-        </button>
+          <button
+            className="bg-gray-200 px-4 py-1 cursor-pointer m-4 rounded-md"
+            onClick={filterRestaurants}
+          >
+            Top rated restaurants
+          </button>
+
+          <input
+            onChange={(e) => setUserName(e.target.value)}
+            className="border border-solid border-black mr-4"
+            value={loggedInUser}
+          />
         </div>
-
-
       </div>
       <div className="flex flex-wrap">
         {listRestaurants?.map((resData) => (
