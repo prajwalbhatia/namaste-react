@@ -1,21 +1,13 @@
-import React from 'react'
+import React from "react";
 
 const Shimmer = () => {
   return (
-    <div className='shimmer-container'>
-    <div className='shimmer-card'></div>
-    <div className='shimmer-card'></div>
-    <div className='shimmer-card'></div>
-    <div className='shimmer-card'></div>
-    <div className='shimmer-card'></div>
-    <div className='shimmer-card'></div>
-    <div className='shimmer-card'></div>
-    <div className='shimmer-card'></div>
-    <div className='shimmer-card'></div>
-    <div className='shimmer-card'></div>
-    <div className='shimmer-card'></div>
+    <div className="flex flex-wrap">
+      {[...Array(14)].map(() => (
+        <div className="m-5 w-[220px] h-[250px] animate-pulse bg-gray-300"></div>
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default Shimmer
+export default Shimmer;
