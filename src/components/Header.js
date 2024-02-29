@@ -33,6 +33,7 @@ const Header = () => {
             <Link to="/cart">Cart - ({cartItems.length} items)</Link>
           </li>
           <li className="px-4 font-bold">{loggedInUser}</li>
+          <button className="mr-2">Login</button>
         </ul>
       </div>
     </div>
