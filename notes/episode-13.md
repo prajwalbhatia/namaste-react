@@ -21,3 +21,4 @@
 ## Note
 - describe is function use to group test cases
 - we can either us test() or it() to write test cases
+- whenever you are using fetch or state update in a component then you have to wrap the render inside act - await act(async () => render(....))
